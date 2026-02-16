@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Phone, Lock, User } from 'lucide-react';
+import { Lock, User } from 'lucide-react';
 import Logo from '../components/Logo';
 
 const Register = () => {
