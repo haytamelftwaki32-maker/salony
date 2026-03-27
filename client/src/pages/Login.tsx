@@ -4,8 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Phone, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import Logo from '../components/Logo';
+import { PhoneInput } from '../components/ui/PhoneInput';
 
 const Login = () => {
     const [phone, setPhone] = useState('');
@@ -72,11 +73,9 @@ const Login = () => {
                         )}
 
                         <div className="space-y-4">
-                            <Input
-                                type="tel"
+                            <PhoneInput
                                 placeholder="0555555555"
                                 label={t('phone')}
-                                icon={<Phone className="w-5 h-5" />}
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 required

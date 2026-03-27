@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Lock, User } from 'lucide-react';
 import Logo from '../components/Logo';
+import { PhoneInput } from '../components/ui/PhoneInput';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -106,17 +107,9 @@ const Register = () => {
                             required
                         />
 
-                        <Input
-                            type="tel"
-                            placeholder="600000000"
+                        <PhoneInput
+                            placeholder="6XXXXXXXX"
                             label={t('phone')}
-                            icon={
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg">🇲🇦</span>
-                                    <span className="text-gray-500 font-medium text-sm">+212</span>
-                                </div>
-                            }
-                            className="pl-[5.5rem] text-left dir-ltr"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             required
