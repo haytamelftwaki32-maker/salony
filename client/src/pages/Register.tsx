@@ -29,7 +29,7 @@ const Register = () => {
             await register({ phone, name, password, role });
             navigate('/');
         } catch (err: any) {
-            setError('Registration failed. Number might be taken.');
+            setError(t('error_registration_failed'));
         } finally {
             setLoading(false);
         }
@@ -99,7 +99,7 @@ const Register = () => {
 
                         <Input
                             type="text"
-                            placeholder="Full Name"
+                            placeholder={t('full_name_placeholder')}
                             label={t('name')}
                             icon={<User className="w-5 h-5" />}
                             value={name}

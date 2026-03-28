@@ -154,5 +154,10 @@
     "password_update_error": "Failed to update password",
     "passwords_dont_match": "Passwords do not match",
     "incorrect_current_password": "Current password is incorrect",
-    "password_min_length": "Password must be at least 6 characters"
+    "password_min_length": "Password must be at least 6 characters",
+    "full_name_placeholder": "Full Name",
+    "loading_dashboard": "Loading your dashboard...",
+    "enter_district": "e.g. Maarif, Casablanca",
+    "error_registration_failed": "Registration failed. Number might be taken.",
+    "error_invalid_credentials": "Invalid credentials"
 }

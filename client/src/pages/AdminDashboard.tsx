@@ -72,13 +72,13 @@ const AdminDashboard = () => {
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading Dashboard...</div>;
+    if (loading) return <div className="p-8 text-center text-gray-500">{t('loading')}</div>;
 
     return (
         <div className="space-y-8">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h1 className="text-2xl font-bold text-primary mb-2">Admin Dashboard</h1>
-                <p className="text-gray-500 font-medium">Full control over users and requests</p>
+                <h1 className="text-2xl font-bold text-primary mb-2">{t('admin_dashboard')}</h1>
+                <p className="text-gray-500 font-medium">{t('admin_subtitle')}</p>
             </div>
 
             {/* Stats Grid */}

@@ -292,7 +292,7 @@ const BarberDashboard = () => {
         }
     }
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading your dashboard...</div>;
+    if (loading) return <div className="p-8 text-center text-gray-500">{t('loading_dashboard')}</div>;
 
     return (
         <div className="space-y-8">
@@ -523,7 +523,7 @@ const BarberDashboard = () => {
                                                 label={t('location_district')}
                                                 value={district}
                                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDistrict(e.target.value)}
-                                                placeholder="Enter your district"
+                                                placeholder={t('enter_district')}
                                             />
                                             <Input
                                                 label={t('starting_price')}

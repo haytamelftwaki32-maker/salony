@@ -154,5 +154,10 @@
     "password_update_error": "فشل تحديث كلمة المرور",
     "passwords_dont_match": "كلمات المرور غير متطابقة",
     "incorrect_current_password": "كلمة المرور الحالية غير صحيحة",
-    "password_min_length": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل"
+    "password_min_length": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "full_name_placeholder": "الاسم الكامل",
+    "loading_dashboard": "جاري تحميل لوحة التحكم...",
+    "enter_district": "مثلاً: المعاريف، الدار البيضاء",
+    "error_registration_failed": "فشل التسجيل. قد يكون الرقم مستخدماً.",
+    "error_invalid_credentials": "بيانات الدخول غير صحيحة"
 }
