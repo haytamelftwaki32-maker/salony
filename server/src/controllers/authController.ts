@@ -2,6 +2,25 @@ import { Request, Response } from 'express';
 import prisma from '../utils/prisma';
 import { hashPassword, comparePasswords, generateToken } from '../utils/auth';
 
+const normalizePhone = (phone: string): string => {
+    // Remove all non-numeric characters
+    let normalized = phone.replace(/\D/g, '');
+    
+    // If it starts with 0 and has 10 digits (Moroccan local format), remove the leading 0
+    if (normalized.startsWith('0') && normalized.length === 10) {
+        normalized = normalized.substring(1);
+    }
+    
+    // If it starts with 212 (Moroccan international code), remove it
+    if (normalized.startsWith('212')) {
+        normalized = normalized.substring(3);
+        // Sometimes users type 21206... so strip the 0 again if it's there
+        if (normalized.startsWith('0')) normalized = normalized.substring(1);
+    }
+    
+    return normalized;
+};
+
 export const register = async (req: Request, res: Response) => {
     try {
         const { phone, password, name, role } = req.body;
@@ -10,8 +29,10 @@ export const register = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
+        const normalizedPhone = normalizePhone(phone);
+
         const existingUser = await prisma.user.findUnique({
-            where: { phone },
+            where: { phone: normalizedPhone },
         });
 
         if (existingUser) {
@@ -23,7 +44,7 @@ export const register = async (req: Request, res: Response) => {
 
         const user = await prisma.user.create({
             data: {
-                phone,
+                phone: normalizedPhone,
                 name,
                 role,
                 password: hashedPassword
@@ -57,18 +78,23 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
     try {
         const { phone, password } = req.body;
+        const normalizedPhone = normalizePhone(phone);
 
         const user = await prisma.user.findUnique({
-            where: { phone },
+            where: { phone: normalizedPhone },
         });
 
         if (!user) {
+            console.log(`[Auth] Login attempt failed: User not found for phone ${normalizedPhone}`);
             return res.status(400).json({ error: 'Invalid credentials' });
         }
 
         // Check password
         const isValid = await comparePasswords(password, user.password);
-        if (!isValid) return res.status(400).json({ error: 'Invalid credentials' });
+        if (!isValid) {
+            console.log(`[Auth] Login attempt failed: Password mismatch for phone ${normalizedPhone}`);
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
 
         const token = generateToken(user.id, user.role);
         res.json({ user, token });
