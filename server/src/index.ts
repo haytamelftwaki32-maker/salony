@@ -51,11 +51,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/requests', requestRoutes);
 
-
 app.get('/', (req, res) => {
     res.send('Barber SaaS API is running');
 });
 
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// For local testing:
+if (process.env.NODE_ENV !== 'production') {
+    server.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+export default app;
