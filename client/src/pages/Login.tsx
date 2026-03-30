@@ -7,6 +7,7 @@ import { Input } from '../components/ui/Input';
 import { Lock } from 'lucide-react';
 import Logo from '../components/Logo';
 import { PhoneInput } from '../components/ui/PhoneInput';
+import { normalizePhone } from '../utils/phoneUtils';
 
 const Login = () => {
     const [phone, setPhone] = useState('');
@@ -24,7 +25,8 @@ const Login = () => {
         setLoading(true);
 
         try {
-            await login(phone, password);
+            const normalizedPhone = normalizePhone(phone);
+            await login(normalizedPhone, password);
             navigate('/');
         } catch (err: any) {
             setError(t('error_invalid_credentials'));

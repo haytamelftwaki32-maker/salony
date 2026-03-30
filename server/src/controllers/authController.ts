@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import prisma from '../utils/prisma';
 import { hashPassword, comparePasswords, generateToken } from '../utils/auth';
+import { normalizePhone } from '../utils/phoneUtils';
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { phone, password, name, role } = req.body;
+        const { password, name, role } = req.body;
+        const phone = normalizePhone(req.body.phone);
 
         if (!phone || !password || !role) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -53,7 +55,8 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { phone, password } = req.body;
+        const { password } = req.body;
+        const phone = normalizePhone(req.body.phone);
 
         const user = await prisma.user.findUnique({
             where: { phone },

@@ -7,6 +7,7 @@ import { Input } from '../components/ui/Input';
 import { Lock, User } from 'lucide-react';
 import Logo from '../components/Logo';
 import { PhoneInput } from '../components/ui/PhoneInput';
+import { normalizePhone } from '../utils/phoneUtils';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -26,7 +27,8 @@ const Register = () => {
         setLoading(true);
 
         try {
-            await register({ phone, name, password, role });
+            const normalizedPhone = normalizePhone(phone);
+            await register({ phone: normalizedPhone, name, password, role });
             navigate('/');
         } catch (err: any) {
             setError(t('error_registration_failed'));
