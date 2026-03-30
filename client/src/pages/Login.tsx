@@ -24,7 +24,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            await login(phone.trim(), password.trim());
+            await login(phone, password);
             navigate('/');
         } catch (err: any) {
             setError(t('error_invalid_credentials'));

@@ -2,25 +2,6 @@ import { Request, Response } from 'express';
 import prisma from '../utils/prisma';
 import { hashPassword, comparePasswords, generateToken } from '../utils/auth';
 
-const normalizePhone = (phone: string): string => {
-    // Remove all non-numeric characters
-    let normalized = phone.replace(/\D/g, '');
-    
-    // If it starts with 0 and has 10 digits (Moroccan local format), remove the leading 0
-    if (normalized.startsWith('0') && normalized.length === 10) {
-        normalized = normalized.substring(1);
-    }
-    
-    // If it starts with 212 (Moroccan international code), remove it
-    if (normalized.startsWith('212')) {
-        normalized = normalized.substring(3);
-        // Sometimes users type 21206... so strip the 0 again if it's there
-        if (normalized.startsWith('0')) normalized = normalized.substring(1);
-    }
-    
-    return normalized;
-};
-
 export const register = async (req: Request, res: Response) => {
     try {
         const { phone, password, name, role } = req.body;
@@ -29,10 +10,8 @@ export const register = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        const normalizedPhone = normalizePhone(phone);
-
         const existingUser = await prisma.user.findUnique({
-            where: { phone: normalizedPhone },
+            where: { phone },
         });
 
         if (existingUser) {
@@ -44,15 +23,12 @@ export const register = async (req: Request, res: Response) => {
 
         const user = await prisma.user.create({
             data: {
-                phone: normalizedPhone,
+                phone,
                 name,
                 role,
                 password: hashedPassword
             },
         });
-
-        // In a real app we would store password, but for now let's just assume we store it.
-        // I will execute a schema update right after this.
 
         // If barber, create empty profile
         if (role === 'BARBER') {
@@ -78,22 +54,26 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
     try {
         const { phone, password } = req.body;
-        const normalizedPhone = normalizePhone(phone);
 
         const user = await prisma.user.findUnique({
-            where: { phone: normalizedPhone },
+            where: { phone },
         });
 
         if (!user) {
-            console.log(`[Auth] Login attempt failed: User not found for phone ${normalizedPhone}`);
+            console.log(`[AUTH] Login failed: User not found for phone ${phone}`);
             return res.status(400).json({ error: 'Invalid credentials' });
         }
 
         // Check password
         const isValid = await comparePasswords(password, user.password);
         if (!isValid) {
-            console.log(`[Auth] Login attempt failed: Password mismatch for phone ${normalizedPhone}`);
+            console.log(`[AUTH] Login failed: Password mismatch for user ${phone}`);
             return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        if (!process.env.JWT_SECRET) {
+            console.error('[AUTH] CRITICAL ERROR: JWT_SECRET is not set in environment variables.');
+            return res.status(500).json({ error: 'Authentication service misconfigured' });
         }
 
         const token = generateToken(user.id, user.role);

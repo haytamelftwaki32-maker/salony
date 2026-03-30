@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 export const generateToken = (userId: string, role: string) => {
-    const secret = process.env.JWT_SECRET || 'fallback-secret-for-dev-only-change-this-now';
-    if (!process.env.JWT_SECRET) {
-        console.warn('WARNING: JWT_SECRET is missing in environment variables. Using fallback.');
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
     }
     return jwt.sign({ userId, role }, secret, {
         expiresIn: '30d',

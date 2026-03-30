@@ -26,12 +26,7 @@ const Register = () => {
         setLoading(true);
 
         try {
-            await register({ 
-                phone: phone.trim(), 
-                name: name.trim(), 
-                password: password.trim(), 
-                role 
-            });
+            await register({ phone, name, password, role });
             navigate('/');
         } catch (err: any) {
             setError(t('error_registration_failed'));
