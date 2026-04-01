@@ -32,6 +32,10 @@ export const register = async (req: Request, res: Response) => {
             },
         });
 
+        // Verify registration in DB immediately (Diagnostic Log)
+        const checkUser = await prisma.user.findUnique({ where: { phone } });
+        console.log(`[AUTH] Registration COMPLETE. User ${phone} verified in DB: ${checkUser ? 'YES' : 'NO'}`);
+
         // If barber, create empty profile
         if (role === 'BARBER') {
             await prisma.barberProfile.create({
@@ -58,19 +62,22 @@ export const login = async (req: Request, res: Response) => {
         const { password } = req.body;
         const phone = normalizePhone(req.body.phone);
 
+        console.log(`[AUTH] User lookup for phone: ${phone}`);
         const user = await prisma.user.findUnique({
             where: { phone },
         });
 
+        console.log(`[AUTH] Found: ${user ? 'YES' : 'NO'}`);
+
         if (!user) {
-            console.log(`[AUTH] Login failed: User not found for phone ${phone}`);
             return res.status(400).json({ error: 'Invalid credentials' });
         }
 
         // Check password
         const isValid = await comparePasswords(password, user.password);
+        console.log(`[AUTH] Password match: ${isValid ? 'YES' : 'NO'}`);
+        
         if (!isValid) {
-            console.log(`[AUTH] Login failed: Password mismatch for user ${phone}`);
             return res.status(400).json({ error: 'Invalid credentials' });
         }
 
