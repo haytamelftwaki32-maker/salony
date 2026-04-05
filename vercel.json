@@ -8,7 +8,7 @@
     },
     {
       "source": "/((?!api/).*)",
-      "destination": "/public/$1"
+      "destination": "/dist-out/$1"
     }
   ],
   "functions": {

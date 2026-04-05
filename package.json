@@ -2,7 +2,7 @@
   "name": "salony-workspace",
   "private": true,
   "scripts": {
-    "build": "npm install && cd client && npm install && npm run build && cd .. && npx prisma generate && npx prisma db push --accept-data-loss && rm -rf public && mkdir public && cp -r client/dist/* public/",
+    "build": "npm install && cd client && npm install && npm run build && cd .. && npx prisma generate && npx prisma db push --accept-data-loss && rm -rf dist-out && mkdir dist-out && cp -r client/dist/* dist-out/",
     "dev:client": "cd client && npm run dev",
     "dev:server": "nodemon api/index.ts",
     "start": "node api/index.ts"

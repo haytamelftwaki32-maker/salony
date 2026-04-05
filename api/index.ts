@@ -55,8 +55,8 @@ app.get('/api/debug', async (req, res) => {
     try {
         const userCount = await prisma.user.count();
         res.json({ 
-            status: 'ok', 
-            database: 'connected',
+            status: "ok", 
+            database: "connected",
             userCount,
             env: {
                 DATABASE_URL: !!process.env.DATABASE_URL,
@@ -66,9 +66,10 @@ app.get('/api/debug', async (req, res) => {
             timestamp: new Date().toISOString()
         });
     } catch (error: any) {
+        console.error('[API DEBUG] Error:', error);
         res.status(500).json({ 
-            status: 'error', 
-            message: 'Database connection failed',
+            status: "error", 
+            database: "disconnected",
             error: error.message,
             env: {
                 DATABASE_URL: !!process.env.DATABASE_URL,
