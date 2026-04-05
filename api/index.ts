@@ -51,6 +51,34 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/requests', requestRoutes);
 
+app.get('/api/debug', async (req, res) => {
+    try {
+        const userCount = await prisma.user.count();
+        res.json({ 
+            status: 'ok', 
+            database: 'connected',
+            userCount,
+            env: {
+                DATABASE_URL: !!process.env.DATABASE_URL,
+                JWT_SECRET: !!process.env.JWT_SECRET,
+                NODE_ENV: process.env.NODE_ENV
+            },
+            timestamp: new Date().toISOString()
+        });
+    } catch (error: any) {
+        res.status(500).json({ 
+            status: 'error', 
+            message: 'Database connection failed',
+            error: error.message,
+            env: {
+                DATABASE_URL: !!process.env.DATABASE_URL,
+                JWT_SECRET: !!process.env.JWT_SECRET,
+                NODE_ENV: process.env.NODE_ENV
+            }
+        });
+    }
+});
+
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'ok', 
