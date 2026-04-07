@@ -1,26 +1,10 @@
 {
-  "version": 2,
-  "builds": [
+  "buildCommand": "npx prisma generate && tsc -b && vite build",
+  "outputDirectory": "dist",
+  "rewrites": [
     {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
