@@ -1,0 +1,8 @@
+{
+  "name": "client-proxy",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd .. && npm run build"
+  }
+}
