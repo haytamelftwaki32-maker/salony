@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Enums not supported in SQLite, defining as constants in application logic
+
+model User {
+  id          String   @id @default(uuid())
+  phone       String   @unique
+  name        String?
+  password    String   
+  role        String   @default("CLIENT") // "CLIENT" | "BARBER" | "ADMIN"
+  image       String?  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  barberProfile BarberProfile?
+  clientRequests ServiceRequest[] @relation("ClientRequests")
+  barberRequests ServiceRequest[] @relation("BarberRequests")
+}
+
+model BarberProfile {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  specialties   String   // JSON string or comma separated
+  priceRange    String   // e.g., "$$"
+  isAvailable   Boolean  @default(true)
+  latitude      Float?
+  longitude     Float?
+  district      String?  // Added district field
+  services      String   @default("[]") // JSON string for detailed services
+  startingPrice Int      @default(50) // Added starting price field
+  bio           String?
+  portfolio     String   @default("[]") // JSON string for photo URLs
+  rating        Float    @default(0)
+  reviewCount   Int      @default(0)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ServiceRequest {
+  id            String        @id @default(uuid())
+  clientId      String
+  client        User          @relation("ClientRequests", fields: [clientId], references: [id])
+  barberId      String
+  barber        User          @relation("BarberRequests", fields: [barberId], references: [id])
+  status        String        @default("PENDING") // "PENDING", "ACCEPTED", etc.
+  serviceType   String
+  location      String
+  latitude      Float?
+  longitude     Float?
+  scheduledTime DateTime
+  price         Float?
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
