@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npx prisma generate && npx prisma db push --accept-data-loss && vite build",
+    "build": "npx prisma generate && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "ts-node api/index.ts",
